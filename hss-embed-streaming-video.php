@@ -6,7 +6,7 @@ Description: Provide access to Streaming Video in your WordPress Website
 Author: Gavin Byrne
 Author URI: https://www.hoststreamsell.com
 Contributors:
-Version: 0.3
+Version: 0.2
 
 HSS Embed Streaming Video is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -55,6 +55,17 @@ function hss_embed_validate_options($input) {
         return $input;
 }
 
+// Register style sheet.
+add_action( 'wp_enqueue_scripts', 'register_hss_embed_plugin_styles' );
+
+/**
+ * Register style sheet.
+ */
+function register_hss_embed_plugin_styles() {
+        wp_register_style( 'hss-embed-streaming-video', plugins_url( 'hss-embed-streaming-video/css/hss-woo.css' ) );
+        wp_enqueue_style( 'hss-embed-streaming-video' );
+}
+
 function hss_embed_options_page () {
 ?>
         <div class="wrap">
@@ -84,6 +95,18 @@ function hss_embed_options_page () {
                                         <th scope="row">Video Player Size<BR><i>(leave blank to use defaults)</i></th>
                                         <td>
                                                 Width <input type="text" size="10" name="hss_embed_options[player_width_default]" value="<?php echo $options['player_width_default']; ?>" /> Height  <input type="text" size="10" name="hss_embed_options[player_height_default]" value="<?php echo $options['player_height_default']; ?>" />
+                                        </td>
+                                </tr>
+                                <tr>
+                                        <th scope="row">Make Player Width and Height Responsive</th>
+                                        <td>
+                                                <input type="checkbox" name="hss_embed_options[responsive_player]" value="1"<?php checked( 1 == $options['responsive_player']); ?> />
+                                        </td>
+                                </tr>
+                                <tr>
+                                        <th scope="row">Reponsive Player Max Width<BR><i>(default is 640 if left blank, only used when Reponsive Player checkbox is checked)</i></th>
+                                        <td>
+                                                Width <input type="text" size="10" name="hss_embed_options[player_responsive_max_width]" value="<?php echo $options['player_responsive_max_width']; ?>" />
                                         </td>
                                 </tr>
                                 <tr>
@@ -177,6 +200,7 @@ global $is_iphone;
                                 $trailer_duration = $xml->result->trailer_duration;
                                 $video_width = $xml->result->width;
                                 $video_height = $xml->result->height;
+				$aspect_ratio = $xml->result->aspect_ratio;
                                 if($video_width>640){
                                         $video_width = "640";
                                         $video_height = "390";
@@ -224,12 +248,16 @@ global $is_iphone;
 
                                 $video = $video."
                                 <script type=\"text/javascript\" src=\"https://www.hoststreamsell.com/mod/secure_videos/jwplayer-6/jwplayer.js\"></script>
-                                <script type=\"text/javascript\" src=\"https://www.hoststreamsell.com/mod/secure_videos/jwplayer/swfobject.js\"></script>
-                                <script type=\"text/javascript\">jwplayer.key=\"".$options['jwplayer_license']."\";</script>
-                                <center>
-                                <div>
-                                <div id='videoframe'>If you are seing this you may not have Flash installed!</div>
-
+                                <script type=\"text/javascript\">jwplayer.key=\"".$options['jwplayer_license']."\";</script>";
+                                if($options["responsive_player"]==1){
+                                        $responsive_width="640";
+                                        if($options["player_responsive_max_width"]!="")
+                                                $responsive_width=$options["player_responsive_max_width"];
+                                        $video.="<div class='hss_video_player' style='max-width:".$responsive_width."px;'>";
+                                }else{
+                                        $video.="<div class='hss_video_player'>";
+                                }
+                                $video.="<div id='videoframe'>An error occurred setting up the video player</div>
                                 <SCRIPT type=\"text/javascript\">
 
                                 var viewTrailer = false;
@@ -266,10 +294,16 @@ global $is_iphone;
                                                     file: 'http://".$hss_video_mediaserver_ip.":1935/hss/smil:".$hss_video_smil."/playlist.m3u8".$hss_video_smil_token."&referer=".urlencode($referrer)."'
                                                 }]
                                             }],
-                                            height: $video_height,
-                                            primary: 'flash',
-                                            width: $video_width
-                                        });
+                                            primary: 'flash',   ";
+                                if($options["responsive_player"]==1){
+                                        $video.="                  width: '100%',
+                                            aspectratio: '".$aspect_ratio."'";
+                                }else{
+                                        $video.="                 height: $video_height,
+                                          width: $video_width";
+                                }
+
+        $video.="                       });
                                 }
 
                                 function rtspPlayer()
@@ -298,7 +332,6 @@ global $is_iphone;
 
                                 </script>
                                 </div>
-                                </center>
                                 <BR>";
 
 		echo $video;
