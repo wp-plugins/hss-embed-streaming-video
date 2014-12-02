@@ -127,7 +127,7 @@ function hss_embed_options_page () {
                         </p>
                 </form>
         </div>
-<?
+<?php
 }
 
 function hss_embed_menu () {

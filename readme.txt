@@ -5,7 +5,7 @@ Contributors: hoststreamsell
 Tags: streaming,video
 Requires at least: 3.3
 Tested up to: 3.4
-Stable tag: 0.4
+Stable tag: 0.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,3 +56,7 @@ No this only works with the HostStreamSell video platform
 = 0.4 =
 
 * Responsive Player Support
+
+= 0.5 =
+
+* Fixed PHP open tag issue
