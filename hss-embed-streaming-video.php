@@ -6,7 +6,7 @@ Description: Provide access to Streaming Video in your WordPress Website
 Author: Gavin Byrne
 Author URI: https://www.hoststreamsell.com
 Contributors:
-Version: 0.4
+Version: 0.6
 
 HSS Embed Streaming Video is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -127,7 +127,7 @@ function hss_embed_options_page () {
                         </p>
                 </form>
         </div>
-<?php
+<?
 }
 
 function hss_embed_menu () {
@@ -155,7 +155,25 @@ global $is_iphone;
         	return $myvariable;
 	}
 
+	$video = "
+                                <SCRIPT type=\"text/javascript\">
 
+
+                                var agent=navigator.userAgent.toLowerCase();
+                                var is_iphone = (agent.indexOf('iphone')!=-1);
+                                var is_ipad = (agent.indexOf('ipad')!=-1);
+                                var is_playstation = (agent.indexOf('playstation')!=-1);
+                                var is_safari = (agent.indexOf('safari')!=-1);
+                                var is_iemobile = (agent.indexOf('iemobile')!=-1);
+                                var is_blackberry = (agent.indexOf('BlackBerry')!=-1);
+                                var is_android = (agent.indexOf('android')!=-1);
+				</SCRIPT>
+	";
+
+	
+	$videoids = explode(",",$videoid);
+	foreach($videoids as $videoidinner)
+	{
                                 $options = get_option('hss_embed_options');
                                 $userId = $user_ID;
 				if($userId==0){
@@ -163,7 +181,7 @@ global $is_iphone;
 				}
 				#echo $userId;
 
-                                $hss_video_id = $videoid;
+                                $hss_video_id = $videoidinner;
 				
 				if($version=="full")
 					$force_allow = "yes";
@@ -246,7 +264,7 @@ global $is_iphone;
                                                 $video_height=$options['player_height_default'];
                                 }
 
-                                $video = $video."
+                                $video .= "
                                 <script type=\"text/javascript\" src=\"https://www.hoststreamsell.com/mod/secure_videos/jwplayer-6/jwplayer.js\"></script>
                                 <script type=\"text/javascript\">jwplayer.key=\"".$options['jwplayer_license']."\";</script>";
                                 if($options["responsive_player"]==1){
@@ -257,34 +275,21 @@ global $is_iphone;
                                 }else{
                                         $video.="<div class='hss_video_player'>";
                                 }
-                                $video.="<div id='videoframe'>An error occurred setting up the video player</div>
+                                $video.="<div id='videoframe$videoidinner'>An error occurred setting up the video player</div>
                                 <SCRIPT type=\"text/javascript\">
 
-                                var viewTrailer = false;
-                                var videoFiles = new Array();;
-                                var trailerFiles = new Array();;
 
-                                var agent=navigator.userAgent.toLowerCase();
-                                var is_iphone = (agent.indexOf('iphone')!=-1);
-                                var is_ipad = (agent.indexOf('ipad')!=-1);
-                                var is_playstation = (agent.indexOf('playstation')!=-1);
-                                var is_safari = (agent.indexOf('safari')!=-1);
-                                var is_iemobile = (agent.indexOf('iemobile')!=-1);
-                                var is_blackberry = (agent.indexOf('BlackBerry')!=-1);
-                                var is_android = (agent.indexOf('android')!=-1);
-                                var is_webos = (agent.indexOf('webos')!=-1);
 
-                                if (is_iphone) { html5Player();}
-                                else if (is_ipad) { html5Player(); }
-                                else if (is_android) { rtspPlayer(); }
-                                else if (is_webos) { rtspPlayer(); }
-                                else if (is_blackberry) { rtspPlayer(); }
-                                else if (is_playstation) { newJWPlayer(); }
-                                else { newJWPlayer(); }
+                                if (is_iphone) { html5Player$videoidinner();}
+                                else if (is_ipad) { html5Player$videoidinner(); }
+                                else if (is_android) { rtspPlayer$videoidinner(); }
+                                else if (is_blackberry) { rtspPlayer$videoidinner(); }
+                                else if (is_playstation) { newJWPlayer$videoidinner(); }
+                                else { newJWPlayer$videoidinner(); }
 
-                                function newJWPlayer()
+                                function newJWPlayer$videoidinner()
                                 {
-                                        jwplayer('videoframe').setup({
+                                        jwplayer('videoframe$videoidinner').setup({
                                             playlist: [{
                                                 image: '$hss_video_big_thumb_url',
                                                 sources: [{
@@ -306,9 +311,9 @@ global $is_iphone;
         $video.="                       });
                                 }
 
-                                function rtspPlayer()
+                                function rtspPlayer$videoidinner()
                                 {
-                                        var player=document.getElementById(\"videoframe\");
+                                        var player=document.getElementById(\"videoframe$videoidinner\");
                                         player.innerHTML='<A HREF=\"rtsp://".$hss_video_mediaserver_ip."/hss/mp4:".$hss_rtsp_url."".$hss_video_smil_token."&referer=".urlencode($referrer)."\">'+
                                         '<IMG SRC=\"".$hss_video_big_thumb_url."\" '+
                                         'ALT=\"Start Mobile Video\" '+
@@ -318,9 +323,9 @@ global $is_iphone;
                                         '</A>';
                                 }
 
-                                function html5Player()
+                                function html5Player$videoidinner()
                                 {
-                                        var player=document.getElementById(\"videoframe\");
+                                        var player=document.getElementById(\"videoframe$videoidinner\");
                                         player.innerHTML='<video controls '+
                                         'src=\"http://".$hss_video_mediaserver_ip.":1935/hss/smil:".$hss_video_smil."/playlist.m3u8".$hss_video_smil_token."&referer=".urlencode($referrer)."\" '+
                                         'HEIGHT=\"".$video_height."\" '+
@@ -333,7 +338,7 @@ global $is_iphone;
                                 </script>
                                 </div>
                                 <BR>";
-
+		}
 		echo $video;
 
       $myvariable = ob_get_clean();

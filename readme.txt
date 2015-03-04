@@ -4,8 +4,8 @@ Plugin URI: http://www.hoststreamsell.com
 Contributors: hoststreamsell
 Tags: streaming,video
 Requires at least: 3.3
-Tested up to: 3.4
-Stable tag: 0.5
+Tested up to: 3.9
+Stable tag: 0.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -25,6 +25,8 @@ Features of the plugin include:
 * add a shortcode like [hss-embed-video videoid="173" version="full"] to embed a full video
 
 * add a shortcode like [hss-embed-video videoid="173" version="trailer"] to embed a trailer version of your video
+
+* add a shortcode like [hss-embed-video videoid="173,157" version="full"] to embed multiple video players on the same page
 
 More information at [HostStreamSell.com](http://hoststreamsell.com/).
 
@@ -60,3 +62,7 @@ No this only works with the HostStreamSell video platform
 = 0.5 =
 
 * Fixed PHP open tag issue
+
+= 0.6 =
+
+* Added support for multiple video players on the same page
