@@ -5,7 +5,7 @@ Contributors: hoststreamsell
 Tags: streaming,video
 Requires at least: 3.3
 Tested up to: 3.9
-Stable tag: 0.6
+Stable tag: 0.61
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -66,3 +66,7 @@ No this only works with the HostStreamSell video platform
 = 0.6 =
 
 * Added support for multiple video players on the same page
+
+= 0.61 =
+
+Fixed php short open tag
