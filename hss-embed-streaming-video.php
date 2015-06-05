@@ -6,7 +6,7 @@ Description: Provide access to Streaming Video in your WordPress Website
 Author: Gavin Byrne
 Author URI: https://www.hoststreamsell.com
 Contributors:
-Version: 0.61
+Version: 0.7
 
 HSS Embed Streaming Video is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -121,6 +121,13 @@ function hss_embed_options_page () {
                                                 <input type="text" size="50" name="hss_embed_options[jwplayer_license]" value="<?php echo $options['jwplayer_license']; ?>" />
                                         </td>
                                 </tr>
+                                <tr>
+                                        <th scope="row">Website Reference ID<BR><i>(set if you want a user to see the full video if they have purchased using one of the other HSS plugins)</i></th>
+                                        <td>
+                                                <input type="text" size="40" name="hss_embed_options[database_id]" value="<?php echo $options['database_id']; ?>" />
+                                        </td>
+                                </tr>
+                                <tr>
                         </table>
                         <p class="submit">
                         <input type="submit" class="button-primary" value="<?php _e('Save Changes') ?>" />
@@ -182,20 +189,36 @@ global $is_iphone;
 				#echo $userId;
 
                                 $hss_video_id = $videoidinner;
-				
 				if($version=="full")
 					$force_allow = "yes";
-                                $response = wp_remote_post( "https://www.hoststreamsell.com/api/1/xml/videos?api_key=".$options['api_key']."&video_id=$hss_video_id&expands=playback_details&private_user_id=$userId&database_id=0&force_allow=$force_allow", array(
-                                        'method' => 'GET',
-                                        'timeout' => 15,
-                                        'redirection' => 5,
-                                        'httpversion' => '1.0',
-                                        'blocking' => true,
-                                        'headers' => array(),
-                                        'body' => $params,
-                                        'cookies' => array()
-                                    )
-                                );
+				else
+					$force_allow = "no";
+				if (isset($options['database_id'])){
+					$response = wp_remote_post( "https://www.hoststreamsell.com/api/1/xml/videos?api_key=".$options['api_key']."&video_id=$hss_video_id&private_user_id=$userId&database_id=".$options['database_id']."&expands=playback_details&force_allow=$force_allow", array(
+                	                        'method' => 'GET',
+        	                                'timeout' => 15,
+	                                        'redirection' => 5,
+	                                        'httpversion' => '1.0',
+                                        	'blocking' => true,
+                                	        'headers' => array(),
+                        	                'body' => $params,
+                	                        'cookies' => array()
+        	                            )
+	                                );
+				}else{
+					$userId = mt_rand(100000,999999);
+					$response = wp_remote_post( "https://www.hoststreamsell.com/api/1/xml/videos?api_key=".$options['api_key']."&video_id=$hss_video_id&expands=playback_details&private_user_id=$userId&database_id=0&force_allow=$force_allow", array(
+                                                'method' => 'GET',
+                                                'timeout' => 15,
+                                                'redirection' => 5,
+                                                'httpversion' => '1.0',
+                                                'blocking' => true,
+                                                'headers' => array(),
+                                                'body' => $params,
+                                                'cookies' => array()
+                                            )
+                                        );
+				}
                                 $res = "";
                                 if( is_wp_error( $response ) ) {
                                    $return_string .= 'Error occured retieving video information, please try refresh the page';
