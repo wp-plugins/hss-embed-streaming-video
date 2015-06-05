@@ -1,0 +1,14 @@
+
+.hss_woo_watching_video_text { text-align:center; }
+.hss_woo_watching_trailer_text { text-align:center; }
+
+.fluid-width-video-wrapper {
+width: 100%;
+position: static !important;
+padding: 0;
+}
+
+.hss_video_player {
+transition: width 0.5s;
+margin:0px auto;
+}
