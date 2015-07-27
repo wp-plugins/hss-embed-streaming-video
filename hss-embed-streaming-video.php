@@ -6,7 +6,7 @@ Description: Provide access to Streaming Video in your WordPress Website
 Author: Gavin Byrne
 Author URI: https://www.hoststreamsell.com
 Contributors:
-Version: 0.7
+Version: 0.71
 
 HSS Embed Streaming Video is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -194,7 +194,11 @@ global $is_iphone;
 				else
 					$force_allow = "no";
 				if (isset($options['database_id'])){
-					$response = wp_remote_post( "https://www.hoststreamsell.com/api/1/xml/videos?api_key=".$options['api_key']."&video_id=$hss_video_id&private_user_id=$userId&database_id=".$options['database_id']."&expands=playback_details&force_allow=$force_allow", array(
+					$database_id = $options['database_id'];
+					if($database_id=="")
+						$database_id=0;
+						
+					$response = wp_remote_post( "https://www.hoststreamsell.com/api/1/xml/videos?api_key=".$options['api_key']."&video_id=$hss_video_id&private_user_id=$userId&database_id=".$database_id."&expands=playback_details&force_allow=$force_allow", array(
                 	                        'method' => 'GET',
         	                                'timeout' => 15,
 	                                        'redirection' => 5,
