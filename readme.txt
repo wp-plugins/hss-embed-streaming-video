@@ -5,7 +5,7 @@ Contributors: hoststreamsell
 Tags: streaming,video
 Requires at least: 3.3
 Tested up to: 3.9
-Stable tag: 0.71
+Stable tag: 0.72
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -78,3 +78,7 @@ Added support to embed trailer version but dynamically show full version if logg
 = 0.71 =
 
 Fixed issue with 0.7 where trailer was sometimes shown instead of full video
+
+= 0.72 =
+
+Improvements to allow multiple embeds for the same video on a single page
