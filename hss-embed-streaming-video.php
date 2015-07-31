@@ -6,7 +6,7 @@ Description: Provide access to Streaming Video in your WordPress Website
 Author: Gavin Byrne
 Author URI: https://www.hoststreamsell.com
 Contributors:
-Version: 0.72
+Version: 0.73
 
 HSS Embed Streaming Video is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -181,6 +181,7 @@ global $is_iphone;
 	$videoids = explode(",",$videoid);
 	foreach($videoids as $videoidinner)
 	{
+			$rand = substr(md5(microtime()),rand(0,26),5);
                                 $options = get_option('hss_embed_options');
                                 $userId = $user_ID;
 				if($userId==0){
@@ -302,21 +303,21 @@ global $is_iphone;
                                 }else{
                                         $video.="<div class='hss_video_player'>";
                                 }
-                                $video.="<div id='videoframe$videoidinner'>An error occurred setting up the video player</div>
+                                $video.="<div id='videoframe$videoidinner$rand'>An error occurred setting up the video player</div>
                                 <SCRIPT type=\"text/javascript\">
 
 
 
-                                if (is_iphone) { html5Player$videoidinner();}
-                                else if (is_ipad) { html5Player$videoidinner(); }
-                                else if (is_android) { rtspPlayer$videoidinner(); }
-                                else if (is_blackberry) { rtspPlayer$videoidinner(); }
-                                else if (is_playstation) { newJWPlayer$videoidinner(); }
-                                else { newJWPlayer$videoidinner(); }
+                                if (is_iphone) { html5Player$videoidinner$rand();}
+                                else if (is_ipad) { html5Player$videoidinner$rand(); }
+                                else if (is_android) { rtspPlayer$videoidinner$rand(); }
+                                else if (is_blackberry) { rtspPlayer$videoidinner$rand(); }
+                                else if (is_playstation) { newJWPlayer$videoidinner$rand(); }
+                                else { newJWPlayer$videoidinner$rand(); }
 
-                                function newJWPlayer$videoidinner()
+                                function newJWPlayer$videoidinner$rand()
                                 {
-                                        jwplayer('videoframe$videoidinner').setup({
+                                        jwplayer('videoframe$videoidinner$rand').setup({
                                             playlist: [{
                                                 image: '$hss_video_big_thumb_url',
                                                 sources: [{
@@ -338,9 +339,9 @@ global $is_iphone;
         $video.="                       });
                                 }
 
-                                function rtspPlayer$videoidinner()
+                                function rtspPlayer$videoidinner$rand()
                                 {
-                                        var player=document.getElementById(\"videoframe$videoidinner\");
+                                        var player=document.getElementById(\"videoframe$videoidinner$rand\");
                                         player.innerHTML='<A HREF=\"rtsp://".$hss_video_mediaserver_ip."/hss/mp4:".$hss_rtsp_url."".$hss_video_smil_token."&referer=".urlencode($referrer)."\">'+
                                         '<IMG SRC=\"".$hss_video_big_thumb_url."\" '+
                                         'ALT=\"Start Mobile Video\" '+
@@ -350,9 +351,9 @@ global $is_iphone;
                                         '</A>';
                                 }
 
-                                function html5Player$videoidinner()
+                                function html5Player$videoidinner$rand()
                                 {
-                                        var player=document.getElementById(\"videoframe$videoidinner\");
+                                        var player=document.getElementById(\"videoframe$videoidinner$rand\");
                                         player.innerHTML='<video controls '+
                                         'src=\"http://".$hss_video_mediaserver_ip.":1935/hss/smil:".$hss_video_smil."/playlist.m3u8".$hss_video_smil_token."&referer=".urlencode($referrer)."\" '+
                                         'HEIGHT=\"".$video_height."\" '+

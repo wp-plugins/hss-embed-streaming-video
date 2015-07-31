@@ -82,3 +82,7 @@ Fixed issue with 0.7 where trailer was sometimes shown instead of full video
 = 0.72 =
 
 Improvements to allow multiple embeds for the same video on a single page
+
+= 0.73 =
+
+Fixed checkin issue with 0.72
